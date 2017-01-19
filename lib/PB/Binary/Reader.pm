@@ -2,7 +2,7 @@ use v6;
 
 #= Low level binary PB reader
 
-module PB::Binary::Reader;
+unit module PB::Binary::Reader;
 
 use PB::Binary::WireTypes;
 use PB::Message;

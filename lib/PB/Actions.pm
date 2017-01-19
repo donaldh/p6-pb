@@ -111,11 +111,11 @@ class PB::Actions {
     }
 
     method str-lit:sym<single-quoted>($/) {
-        make $<str-contents-single>>>.flat>>.ast.join;
+        make $<str-contents-single>.flat>>.ast.join;
     }
 
     method str-lit:sym<double-quoted>($/) {
-        make $<str-contents-double>>>.flat>>.ast.join;
+        make $<str-contents-double>.flat>>.ast.join;
     }
 
     method str-contents-single($/) {
@@ -135,19 +135,19 @@ class PB::Actions {
     }
 
     method str-escape:sym<hex>($/) {
-        make chr(:16($<xdigit>.join));
+        make chr(:16(~$<xdigit>.join));
     }
 
     method str-escape:sym<oct>($/) {
-        make chr(:8($<digit>.join));
+        make chr(:8(~$<digit>));
     }
 
     method str-escape:sym<char>($/) {
-        my %h = {
+        my %h = 
             'n' => "\n",
             '\\' => "\\",
             # TODO: others...
-        };
+        ;
         make %h{~$<char>};
     }
 
@@ -166,7 +166,7 @@ class PB::Actions {
     }
 
     method int-lit:sym<oct>($/) {
-        make :8($<digit>.join || '0');
+        make :8(~$<digit> || '0');
     }
 
     method constant:sym<nan>($/) {

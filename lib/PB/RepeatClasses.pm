@@ -2,7 +2,7 @@ use v6;
 
 #= Field repeat classes
 
-module PB::RepeatClasses;
+unit module PB::RepeatClasses;
 
 
 #= Ways a field can repeat (or not)

@@ -2,7 +2,7 @@ use v6;
 
 #= Low level binary PB wire types
 
-module PB::Binary::WireTypes;
+unit module PB::Binary::WireTypes;
 
 
 #= Binary wire types

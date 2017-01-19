@@ -8,14 +8,22 @@ class PB::Model::Extension {
         die "name must be a string of non-zero length" unless $name.chars;
         self.bless(:$name, :@fields);
     }
+
+    method gist() {
+        "<Extension {$.name}={$.number} opts=[{@.options>>.gist}]>"
+    }
 }
 
 multi infix:<eqv>(PB::Model::Extension $a, PB::Model::Extension $b) is export {
-    $a.name eq $b.name && $a.fields eqv $b.fields;
+    [&&] flat
+        $a.name eq $b.name,
+        $a.fields eqv $b.fields;
 }
 
 multi infix:<eqv>(PB::Model::Extension @a, PB::Model::Extension @b) is export {
-    @a.elems == @b.elems && @a Zeqv @b;
+   [&&] flat
+       @a.elems == @b.elems,
+       @a Zeqv @b;
 }
 
 
@@ -36,5 +44,7 @@ multi infix:<eqv>(PB::Model::ExtensionField $a, PB::Model::ExtensionField $b) is
 }
 
 multi infix:<eqv>(PB::Model::ExtensionField @a, PB::Model::ExtensionField @b) is export {
-    @a.elems == @b.elems && @a Zeqv @b;
+    [&&] flat
+        @a.elems == @b.elems,
+        @a Zeqv @b;
 }

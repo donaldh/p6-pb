@@ -20,7 +20,7 @@ class PB::Model::Field {
 }
 
 multi infix:<eqv>(PB::Model::Field $a, PB::Model::Field $b) is export {
-    [&&] $a.type eq $b.type,
+    [&&] flat $a.type eq $b.type,
          $a.name eq $b.name,
          $a.label eq $b.label,
          $a.number == $b.number,

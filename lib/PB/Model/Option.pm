@@ -4,7 +4,7 @@ class PB::Model::Option {
     has Str $.name;
     has $.constant;
     has PB::Model::SubMessage $.sub-message;
-    
+
     method new(Str :$name!, :$constant?, PB::Model::SubMessage :$sub-message?) {
         if !$name.chars {
             die "name must not be zero length";
@@ -21,7 +21,7 @@ class PB::Model::Option {
 }
 
 multi infix:<eqv>(PB::Model::Option $a, PB::Model::Option $b) is export {
-    [&&] $a.name eq $b.name,
+    [&&] flat $a.name eq $b.name,
          $a.constant eqv $b.constant,
          $a.sub-message eqv $b.sub-message;
 }

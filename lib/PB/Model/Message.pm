@@ -22,11 +22,12 @@ class PB::Model::Message {
 }
 
 multi infix:<eqv>(PB::Model::Message $a, PB::Model::Message $b) is export {
-    [&&] $a.name eq $b.name,
-         $a.enums eqv $b.enums,
-         $a.fields eqv $b.fields,
-         $a.messages eqv $b.messages,
-         $a.extensions eqv $b.extensions;
+    [&&] flat
+        $a.name eq $b.name,
+        $a.enums eqv $b.enums,
+        $a.fields eqv $b.fields,
+        $a.messages eqv $b.messages,
+        $a.extensions eqv $b.extensions;
 }
 
 multi infix:<eqv>(PB::Model::Message @a, PB::Model::Message @b) is export {

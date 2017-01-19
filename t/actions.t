@@ -1,3 +1,5 @@
+use Grammar::Tracer;
+
 use Test;
 use PB::Grammar;
 use PB::Actions;
@@ -229,7 +231,7 @@ sub gr_ok($text, $rule, $expected, $desc?) {
     $msg = PB::Model::Message.new(:name<a>, :enums[$menum]);
     $msg2 = $msg.clone(:enums[$menum2]);
 
-    isnt_eqv $msg, $msg2, 'message enum ineqauality';
+    isnt_eqv $msg, $msg2, 'message enum inequality';
     is_eqv $msg, $msg.clone(:enums($menum)), 'message enum equality';
 
     # with a contained message
@@ -250,7 +252,7 @@ sub gr_ok($text, $rule, $expected, $desc?) {
     ok PB::Model::Message.new(name=>'hello', extensions=>[PB::Model::ExtensionField.new(start=>1)]), 'message creation w/ extension';
     my $emsg = PB::Model::Message.new(:name<a>, :extensions([PB::Model::ExtensionField.new(start=>1)]));
     my $emsg2 = $emsg.clone(:extensions($emsg.extensions[0].clone(start=>2)));
-    isnt_eqv $emsg, $emsg2, 'message w/ extension ineqauality';
+    isnt_eqv $emsg, $emsg2, 'message w/ extension inequality';
     is_eqv $emsg, $emsg2.clone(:extensions($emsg.extensions[0])), 'message w/ extensions equality';
 }
 

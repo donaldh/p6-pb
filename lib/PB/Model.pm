@@ -1,3 +1,3 @@
 use PB;
 
-module PB::Model;
+unit module PB::Model;

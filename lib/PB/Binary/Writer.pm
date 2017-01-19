@@ -2,7 +2,7 @@ use v6;
 
 #= Low level binary PB writer
 
-module PB::Binary::Writer;
+unit module PB::Binary::Writer;
 
 use PB::Binary::WireTypes;
 use PB::Message;
