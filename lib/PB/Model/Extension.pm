@@ -10,22 +10,13 @@ class PB::Model::Extension {
     }
 
     method gist() {
-        "<Extension {$.name}={$.number} opts=[{@.options>>.gist}]>"
+        "<Extension name={$.name} fields=[{@.fields>>.gist}]>"
     }
 }
 
 multi infix:<eqv>(PB::Model::Extension $a, PB::Model::Extension $b) is export {
-    [&&] flat
-        $a.name eq $b.name,
-        $a.fields eqv $b.fields;
+    $a.name eq $b.name && $a.fields eqv $b.fields;
 }
-
-multi infix:<eqv>(PB::Model::Extension @a, PB::Model::Extension @b) is export {
-   [&&] flat
-       @a.elems == @b.elems,
-       @a Zeqv @b;
-}
-
 
 class PB::Model::ExtensionField {
     # the maximum extension number
@@ -41,10 +32,4 @@ class PB::Model::ExtensionField {
 
 multi infix:<eqv>(PB::Model::ExtensionField $a, PB::Model::ExtensionField $b) is export {
     $a.start == $b.start && ((!$a.end && !$b.end) || $a.end == $b.end);
-}
-
-multi infix:<eqv>(PB::Model::ExtensionField @a, PB::Model::ExtensionField @b) is export {
-    [&&] flat
-        @a.elems == @b.elems,
-        @a Zeqv @b;
 }

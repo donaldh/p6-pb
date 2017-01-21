@@ -8,7 +8,7 @@ use PB::Binary::Writer;
 # ENCODING TESTS
 
 # Tests for encode-field-key()
-for (0, 1, 2, 3, 200, 60_000, 20_000_000) X ^8 -> $tag, $type {
+for flat (0, 1, 2, 3, 200, 60_000, 20_000_000) X ^8 -> $tag, $type {
     is encode-field-key($tag, $type), $tag +< 3 + $type,
        "encode-field-key($tag, $type) encodes field key properly";
 }
@@ -51,7 +51,7 @@ $buffer := buf8.new();
 $offset  = 0;
 write-pair($buffer, $offset, 1, WireType::VARINT, 150);
 my $trivial := buf8.new(0x08, 0x96, 0x01);
-is_deeply $buffer, $trivial, 'Wrote trivial buffer correctly';
+is-deeply $buffer, $trivial, 'Wrote trivial buffer correctly';
 is $offset, 3, '... and offset was updated correctly';
 
 # Buffer containing fixed size fields
@@ -83,7 +83,7 @@ write-pair($buffer, $offset, 2, WireType::FIXED_64, 0x12345678BEEFCAFE);
 my $fixed-fields := buf8.new(0x0D, 0x78, 0x56, 0x34, 0x12,
                              0x11, 0xFE, 0xCA, 0xEF, 0xBE,
                                    0x78, 0x56, 0x34, 0x12);
-is_deeply $buffer, $fixed-fields, 'Wrote fixed fields buffer correctly';
+is-deeply $buffer, $fixed-fields, 'Wrote fixed fields buffer correctly';
 is $offset, 14, '... and offset was updated correctly';
 
 
@@ -91,7 +91,7 @@ is $offset, 14, '... and offset was updated correctly';
 $buffer := buf8.new();
 $offset  = 1;
 write-blob8($buffer, $offset, blob8.new(0..255));
-is_deeply $buffer.subbuf(1), buf8.new(0..255), 'Wrote bytes 0..255 correctly';
+is-deeply $buffer.subbuf(1), buf8.new(0..255), 'Wrote bytes 0..255 correctly';
 is $offset, 257, '... and offset was updated correctly';
 
 $buffer := buf8.new();

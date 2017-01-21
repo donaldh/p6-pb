@@ -40,7 +40,7 @@ class X::PB::Binary::WireType::Mismatch is Exception {
 
 #= Convert combined field key to (field tag number, wire type)
 sub decode-field-key(int $key) is pure is export {
-    ($key +> 3, $key +& 7)
+    $key +> 3, $key +& 7
 }
 
 

@@ -14,7 +14,7 @@ sub test-decode-field-key($key, $expected-tag, $expected-type) {
     is $type, $expected-type, "decode-field-key($key) decodes type properly";
 }
 
-for (0, 1, 2, 3, 200, 60_000, 20_000_000) X ^8 -> $tag, $type {
+for flat (0, 1, 2, 3, 200, 60_000, 20_000_000) X ^8 -> $tag, $type {
     test-decode-field-key($tag +< 3 + $type, $tag, $type);
 }
 

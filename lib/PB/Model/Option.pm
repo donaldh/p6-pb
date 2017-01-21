@@ -21,11 +21,7 @@ class PB::Model::Option {
 }
 
 multi infix:<eqv>(PB::Model::Option $a, PB::Model::Option $b) is export {
-    [&&] flat $a.name eq $b.name,
+    [&&] $a.name eq $b.name,
          $a.constant eqv $b.constant,
          $a.sub-message eqv $b.sub-message;
-}
-
-multi infix:<eqv>(PB::Model::Option @a, PB::Model::Option @b) is export {
-    @a.elems == @b.elems && @a Zeqv @b;
 }

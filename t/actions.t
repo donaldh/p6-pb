@@ -9,6 +9,8 @@ use PB::Model::Option;
 use PB::Model::Enum;
 use PB::Model::Extension;
 
+plan(117);
+
 # Cribbed from Test.pm's is_deeply(), to work around a language limitation
 # which prevents an independently compiled module (Test.pm in this case)
 # from seeing multi candidates defined in a lexical scope it couldn't see
@@ -195,7 +197,7 @@ sub gr_ok($text, $rule, $expected, $desc?) {
     is_eqv $extf, $extf2, 'extension field equality';
     isnt_eqv $extf, $extf2.clone(end=>2), 'extension field end inequality';
     isnt_eqv $extf, $extf2.clone(start=>1), 'extension field start inequality';
-    isnt_eqv PB::Model::ExtensionField.new(start=>1), PB::Model::ExtensionField.new(start=>1), 'extension field equality without an end';
+    is_eqv PB::Model::ExtensionField.new(start=>1), PB::Model::ExtensionField.new(start=>1), 'extension field equality without an end';
     isnt_eqv PB::Model::ExtensionField.new(start=>2), PB::Model::ExtensionField.new(start=>1), 'extension field inequality without an end';
 
     # parsing
@@ -300,5 +302,3 @@ sub gr_ok($text, $rule, $expected, $desc?) {
             PB::Model::ExtensionField.new(start=>101, end=>PB::Model::ExtensionField::MAX)]),
         'message w/ 2 extensions (one of which is MAX)';
 }
-
-done;

@@ -11,14 +11,10 @@ class PB::Model::EnumField {
 }
 
 multi infix:<eqv>(PB::Model::EnumField $a, PB::Model::EnumField $b) is export {
-    [&&] flat
+    [&&]
         $a.name eq $b.name,
         $a.value == $b.value,
         $a.options eqv $b.options;
-}
-
-multi infix:<eqv>(PB::Model::EnumField @a, PB::Model::EnumField @b) is export {
-    @a.elems == @b.elems && @a Zeqv @b;
 }
 
 
@@ -34,12 +30,8 @@ class PB::Model::Enum {
 }
 
 multi infix:<eqv>(PB::Model::Enum $a, PB::Model::Enum $b) is export {
-    [&&] flat
+    [&&]
         $a.name eq $b.name,
         $a.fields eqv $b.fields,
         $a.options eqv $b.options;
-}
-
-multi infix:<eqv>(PB::Model::Enum @a, PB::Model::Enum @b) is export {
-    @a.elems == @b.elems && @a Zeqv @b;
 }

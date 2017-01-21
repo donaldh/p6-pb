@@ -1,4 +1,5 @@
 use v6;
+use nqp;
 
 #= Low level binary PB writer
 
@@ -47,10 +48,10 @@ sub encode-value(Str $field-type, Mu $value --> Mu) is pure is export {
 
 
 #= Write a varint into a buffer at a given offset, updating the offset
-sub write-varint(buf8 $buffer, Int $offset is rw, int $value) is export {
+sub write-varint(buf8 $buffer, Int $offset is rw, int $param-value) is export {
     my $buf := nqp::decont($buffer);
     # Avoid infinite loop on negative values
-    $value = $value +& BIT_MASK_64_BITS;
+    my $value = $param-value +& BIT_MASK_64_BITS;
 
     repeat while $value {
         my int $byte = $value +& 127;
