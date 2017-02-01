@@ -1,13 +1,17 @@
+#use Grammar::Tracer;
 
 grammar PB::Grammar {
     token TOP           { ^ <.ws> <proto> <.ws> $ <.ws> }
-    token proto         { [<message> | <pkg> | <import> | <option> | <enum> | <extend> | <service> | ';']* }
+    token proto         { [<message> | <pkg> | <import> | <option> | <enum> | <extend> | <service> | <syntax> | ';' ]* }
 
     # comments and whitespace
     proto token comment { * }
     token comment:sym<single-line> { '//' .*? $$ } # todo test \N*
     token comment:sym<multi-line>  { '/*' .*? '*/' }
     token ws            { <!ww> [\s | <.comment>]* }
+
+    # syntax
+    rule syntax         { 'syntax' '=' <str-lit> ';' }
 
     # import
     rule import         { 'import' <public>? <str-lit> ';' }
@@ -20,12 +24,12 @@ grammar PB::Grammar {
     rule option         { 'option' <opt-body> ';' }
 
     # enum
-    rule enum           { 'enum' <ident> '{' [<option> | <enum-field> | ';']* '}' } # todo: translate into  '{' ~ '}'
+    rule enum           { 'enum' <ident> '{' [<option> | <enum-field> | ';' ]* '}' } # todo: translate into  '{' ~ '}'
     rule enum-field     { <ident> '=' <int-lit> <field-opts>? ';' }
 
     # service/rpc
     rule service        { 'service' <ident> '{' [<option> | <rpc> | ';']* '}' }
-    rule rpc            { 'rpc' <ident> '(' <user-type> ')' 'returns' '(' <user-type> ')' [<rpc-body>? | ';'] }
+    rule rpc            { 'rpc' <ident> '(' <user-type> ')' 'returns' '(' <user-type> ')' [<rpc-body>? | ';' ] }
     rule rpc-body       { '{' ~ '}' [<option>*] }
 
     # extend
@@ -33,14 +37,25 @@ grammar PB::Grammar {
 
     # message
     rule message        { 'message' <ident> <message-body> }
-    rule message-body   { '{' [<message> | <field> | <extensions> | <option> | <group> | <enum> | <extend> | ';']* '}' }
-    rule field          { <label> <type> <ident> '=' <field-num> <field-opts>? ';' }
+    rule message-body   { '{' [<message> | <field> | <oneof> | <map-field>
+                               | <extensions> | <reserved> | <option> | <group> | <enum> | <extend> | ';' ]* '}' }
+
+    rule field          { <label>? <type> <ident> '=' <field-num> <field-opts>? ';' }
     rule field-opts     { '[' [<opt-body> ','?]* ']' } # todo: make this turn into a prettier ast, also disallow trailing comma
     # token field-opt     { [<default-opt> | <opt-body>] }
     # rule default-opt    { 'default' <.ws> '=' <constant> }
     rule extensions     { 'extensions' <extension> (',' <extension>)* ';' }
     rule extension      { $<start>=<int-lit> ['to' $<end>=[<int-lit> | 'max']]? }
     rule group          { <label> 'group' <camel-ident> '=' <int-lit> <message-body> }
+    rule reserved       { 'reserved' <extension> (',' <extension>)* ';' }
+
+    rule oneof          { 'oneof' <ident> '{' [ <field> | ';' ]* '}' }
+
+    rule map-field      { 'map' '<' <key-type> ',' <type> '>' <ident> '=' <field-num> <field-opts>? ';' }
+    rule key-type       { 'int32' | 'int64' | 'uint32'
+                        | 'uint64' | 'sint32' | 'sint64' | 'fixed32'
+                        | 'fixed64' | 'sfixed32' | 'sfixed64' | 'bool'
+                        | 'string' }
 
     # commonly used tokens
 
@@ -56,16 +71,16 @@ grammar PB::Grammar {
     rule block          { [<ident> | <block-ident>] '{' ~ '}' [<pairlist> | <block>]* }
     rule block-ident    { '[' ~ ']' [<dotted-ident>] }
 
-    token type          { 'double' | 'float' | 'int32' | 'int64' | 'uint32' 
-                        | 'uint64' | 'sint32' | 'sint64' | 'fixed32' 
-                        | 'fixed64' | 'sfixed32' | 'sfixed64' | 'bool' 
+    token type          { 'double' | 'float' | 'int32' | 'int64' | 'uint32'
+                        | 'uint64' | 'sint32' | 'sint64' | 'fixed32'
+                        | 'fixed64' | 'sfixed32' | 'sfixed64' | 'bool'
                         | 'string' | 'bytes' | <user-type> }
 
     token user-type     { '.'? <dotted-ident> }
 
     token label         { 'required' | 'optional' | 'repeated' }
 
-    token ident         { <[a..zA..Z]>\w* }
+    token ident         { <[_a..zA..Z]>\w* }
 
     token dotted-ident  { <ident> ('.' <ident>)* }
 
