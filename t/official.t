@@ -5,26 +5,27 @@ use PB::Grammar;
 sub g_ok (Str $testme, Str $desc?) { ok PB::Grammar.parse($testme), $desc; }
 
 # download the unit test files from the offical google repo and test our grammar against them
-if run('which', 'svn') == 0 {
-    say 'svn is installed... checking for protobuf repo';
+if run('which', 'git') == 0 {
+    say 'git is installed... checking for protobuf repo';
 
-    my $absdir = $?FILE.path.absolute.directory;
-    my $pbdir = IO::Spec.join: '', $absdir, 'data/protobuf-read-only';
+    my $absdir = $?FILE.path.dirname;
+    my $pbdir = $*SPEC.join: '', $absdir, 'data/protobuf-read-only';
 
-    if !grep 'protobuf-read-only', dir $absdir {
-        run 'svn', 'checkout', 'http://protobuf.googlecode.com/svn/trunk/', $pbdir;
+    if ! $pbdir.path.d {
+        run 'git', 'clone', 'https://github.com/google/protobuf.git', $pbdir;
     } else {
-        run 'svn', 'update', $pbdir;
+        temp $*CWD = $pbdir;
+        run 'git', 'pull';
     }
 
-    my $srcdir = IO::Spec.join: '', $pbdir, 'src/google/protobuf';
+    my $srcdir = $*SPEC.join: '', $pbdir, 'src/google/protobuf';
     my @files = dir $srcdir, :test(/proto$/);
 
     for @files -> $path {
-        g_ok(slurp(open $path), "parse {$path}");
+        g_ok(slurp($path), "parse {$path}");
     }
 } else {
-    say 'svn is not installed... skipping official protobuf tests';
+    say 'git is not installed... skipping official protobuf tests';
 }
 
 done;
