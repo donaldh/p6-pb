@@ -46,12 +46,12 @@ grammar PB::Grammar {
     # rule default-opt    { 'default' <.ws> '=' <constant> }
     rule extensions     { 'extensions' <extension> (',' <extension>)* ';' }
     rule extension      { $<start>=<int-lit> ['to' $<end>=[<int-lit> | 'max']]? }
-    rule group          { <label> 'group' <camel-ident> '=' <int-lit> <message-body> }
+    rule group          { <label>? 'group' <camel-ident> '=' <int-lit> <message-body> }
     rule reserved       { 'reserved' [ <ranges> | <field-names> ] }
     rule ranges         { <extension> (',' <extension>)* ';' }
     rule field-names     { <str-lit> (',' <str-lit>)* ';' }
 
-    rule oneof          { 'oneof' <ident> '{' [ <field> | ';' ]* '}' }
+    rule oneof          { 'oneof' <ident> '{' [ <group> | <field> | <option> | ';' ]* '}' }
 
     rule map-field      { 'map' '<' <key-type> ',' <type> '>' <ident> '=' <field-num> <field-opts>? ';' }
     rule key-type       { 'int32' | 'int64' | 'uint32'
@@ -81,6 +81,8 @@ grammar PB::Grammar {
     token user-type     { '.'? <dotted-ident> }
 
     token label         { 'required' | 'optional' | 'repeated' }
+
+    rule full-ident     { <ident>+ % '.'}
 
     token ident         { <[_a..zA..Z]>\w* }
 
@@ -114,18 +116,20 @@ grammar PB::Grammar {
     # string
     token constant:sym<str>             { <str-lit> }
     proto token str-lit                 { * }
-    token str-lit:sym<single-quoted>    { \' ~ \' <str-contents-single>* } #'
-    token str-lit:sym<double-quoted>    { \" ~ \" <str-contents-double>* } #"
+    token str-lit:sym<single-quoted>    { \' ~ \' <str-contents-single>* } # stupid syntax highlighting ' }
+    token str-lit:sym<double-quoted>    { \" ~ \" <str-contents-double>* } # stupid syntax highlighting " }
 
-    token str-contents-single           { <-[\\\x00\n']>+ | <str-escape> } #'
-    token str-contents-double           { <-[\\\x00\n"]>+ | <str-escape> } #"
+    token str-contents-single           { <-[\\\x00\n']>+ | <str-escape> } # stupid syntax highlighting ' ] }
+    token str-contents-double           { <-[\\\x00\n"]>+ | <str-escape> } # stupid syntax highlighting " ] }
 
     proto regex str-escape              { * }
 
     regex str-escape:sym<hex>           { '\\' <[xX]> <xdigit> ** 1..2 }
     regex str-escape:sym<oct>           { '\\' $<digit>=<[0..7]> ** 1..3 }
-    regex str-escape:sym<char>          { '\\' $<char>=<[abfnrtv\\?'"]> }       # ' <- stupid syntax highlighting
+    regex str-escape:sym<char>          { '\\' $<char>=<[abfnrtv\\?'"]> }       # stupid syntax highlighting ' ] }
 
     # symbol constant - match last so true/false/nan/inf whatever can be picked up
     token constant:sym<symbol>   { <ident> }
+
+    method FAILGOAL($goal) { die "cannot find $goal near position {self.pos}" }
 }
