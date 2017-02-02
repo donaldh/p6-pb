@@ -41,13 +41,15 @@ grammar PB::Grammar {
                                | <extensions> | <reserved> | <option> | <group> | <enum> | <extend> | ';' ]* '}' }
 
     rule field          { <label>? <type> <ident> '=' <field-num> <field-opts>? ';' }
-    rule field-opts     { '[' [<opt-body> ','?]* ']' } # todo: make this turn into a prettier ast, also disallow trailing comma
+    rule field-opts     { '[' <opt-body>+ % ',' ']' } # todo: make this turn into a prettier ast, also disallow trailing comma
     # token field-opt     { [<default-opt> | <opt-body>] }
     # rule default-opt    { 'default' <.ws> '=' <constant> }
     rule extensions     { 'extensions' <extension> (',' <extension>)* ';' }
     rule extension      { $<start>=<int-lit> ['to' $<end>=[<int-lit> | 'max']]? }
     rule group          { <label> 'group' <camel-ident> '=' <int-lit> <message-body> }
-    rule reserved       { 'reserved' <extension> (',' <extension>)* ';' }
+    rule reserved       { 'reserved' [ <ranges> | <field-names> ] }
+    rule ranges         { <extension> (',' <extension>)* ';' }
+    rule field-names     { <str-lit> (',' <str-lit>)* ';' }
 
     rule oneof          { 'oneof' <ident> '{' [ <field> | ';' ]* '}' }
 
@@ -99,13 +101,13 @@ grammar PB::Grammar {
     # int
     token constant:sym<int> { <int-lit> }
     proto token int-lit     { * }
-    token int-lit:sym<dec>  { <sign> <[1..9]>\d* }
+    token int-lit:sym<dec>  { <sign> <[1..9]>\d* <!before <[.eE]> > }
     token int-lit:sym<hex>  { <sign> '0' <[xX]> <xdigit>+ }
     token int-lit:sym<oct>  { <sign> '0' $<digit>=<[0..7]>* }
 
     # float
-    token exponent              { [<[eE]> ['+'|'-']? \d+] }
-    token constant:sym<float>   { <sign> [<float-leading> | <float-no-leading>] }
+    token exponent              { [<[eE]> ['+'|'-']? \d+ ] }
+    token constant:sym<float>   { <sign> [<float-leading> | <float-no-leading> ] }
     token float-no-leading      { '.' \d+ <exponent>? }
     token float-leading         { \d+ '.'? \d* <exponent>? }
 
@@ -118,11 +120,11 @@ grammar PB::Grammar {
     token str-contents-single           { <-[\\\x00\n']>+ | <str-escape> } #'
     token str-contents-double           { <-[\\\x00\n"]>+ | <str-escape> } #"
 
-    proto token str-escape              { * }
+    proto regex str-escape              { * }
 
-    token str-escape:sym<hex>           { '\\' <[xX]> <xdigit> ** 1..2 }
-    token str-escape:sym<oct>           { '\\' $<digit>=<[0..7]> ** 1..3 }
-    token str-escape:sym<char>          { '\\' $<char>=<[abfnrtv\\?'"]> }       # ' <- stupid syntax highlighting
+    regex str-escape:sym<hex>           { '\\' <[xX]> <xdigit> ** 1..2 }
+    regex str-escape:sym<oct>           { '\\' $<digit>=<[0..7]> ** 1..3 }
+    regex str-escape:sym<char>          { '\\' $<char>=<[abfnrtv\\?'"]> }       # ' <- stupid syntax highlighting
 
     # symbol constant - match last so true/false/nan/inf whatever can be picked up
     token constant:sym<symbol>   { <ident> }
