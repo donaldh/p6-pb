@@ -5,7 +5,7 @@ use PB::Binary::Writer;
 
 
 #= Root of all test data directories
-constant $DATA_ROOT = $*PROGRAM_NAME.path.directory ~ '/data';
+constant $DATA_ROOT = $*PROGRAM-NAME.path.dirname ~ '/data';
 
 #= Directory containing .proto files from official protobuf docs
 constant $PROTO_DIR = "$DATA_ROOT/google-docs";
@@ -29,7 +29,7 @@ constant $PROTO_DIR = "$DATA_ROOT/google-docs";
         my $offset = 0;
         write-message($buf1, $offset, $test1);
         my $good1 := buf8.new(0x08, 0x96, 0x01);
-        is_deeply $buf1, $good1, 'wrote sample test1 buffer correctly';
+        is-deeply $buf1, $good1, 'wrote sample test1 buffer correctly';
     }
 }
 
@@ -53,7 +53,7 @@ constant $PROTO_DIR = "$DATA_ROOT/google-docs";
         write-message($buf2, $offset, $test2);
         my $good2 := buf8.new(0x12, 0x07, 0x74, 0x65, 0x73,
                               0x74, 0x69, 0x6e, 0x67);
-        is_deeply $buf2, $good2, 'wrote sample test2 buffer correctly';
+        is-deeply $buf2, $good2, 'wrote sample test2 buffer correctly';
     }
 }
 
@@ -85,7 +85,7 @@ constant $PROTO_DIR = "$DATA_ROOT/google-docs";
         my $offset = 0;
         write-message($buf3, $offset, $test3);
         my $good3 := buf8.new(0x1a, 0x03, 0x08, 0x96, 0x01);
-        is_deeply $buf3, $good3, 'wrote sample test3 buffer correctly';
+        is-deeply $buf3, $good3, 'wrote sample test3 buffer correctly';
     }
 }
 
@@ -102,13 +102,13 @@ constant $PROTO_DIR = "$DATA_ROOT/google-docs";
             TEST4
 
         my $test4  = Test4.new(:d(3, 270, 86942));
-        is_deeply $test4.d, [3, 270, 86942], 'test4.d has correct value';
+        is-deeply $test4.d, [3, 270, 86942], 'test4.d has correct value';
 
         my $buf4  := buf8.new();
         my $offset = 0;
         write-message($buf4, $offset, $test4);
         my $good4 := buf8.new(0x22, 0x06, 0x03, 0x8E, 0x02, 0x9E, 0xA7, 0x05);
-        is_deeply $buf4, $good4, 'wrote sample test4 buffer correctly';
+        is-deeply $buf4, $good4, 'wrote sample test4 buffer correctly';
     }
 }
 

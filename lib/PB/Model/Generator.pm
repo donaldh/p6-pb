@@ -1,4 +1,5 @@
 use Metamodel::Perlable;
+use nqp;
 
 use PB;
 use PB::Grammar;
@@ -68,7 +69,7 @@ class PB::Model::Generator {
             method compose(|) {
                 my $class = callsame;
 
-                @!ordered-fields :=
+                @!ordered-fields =
                     self.attributes($class).grep(*.has_accessor)\
                     .grep({ $_.name !~~ m/'-'/ }).sort(*.pb_number);
                 %!fields-by-tag{.pb_number} = $_ for @!ordered-fields;
@@ -171,7 +172,7 @@ our sub EXPORT(*@args) {
     my $gen = PB::Model::Generator.new(:$ast, :prefix(@args[1] // ''));
 
     # export these symbols
-    %(gather for $gen.all-classes -> $name, $class {
+    %(gather for flat $gen.all-classes -> $name, $class {
         # say "GEN $name $class";
         take $name => $class unless $name eq ANON_NAME;
     });

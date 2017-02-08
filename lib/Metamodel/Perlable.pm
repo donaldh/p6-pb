@@ -1,4 +1,5 @@
 use v6;
+use nqp;
 
 #= Composed into an Attribute subclass to serialize the attribute definitions to Perl source
 role Metamodel::PerlableAttribute {
