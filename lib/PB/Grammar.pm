@@ -49,7 +49,7 @@ grammar PB::Grammar {
     rule group          { <label>? 'group' <camel-ident> '=' <int-lit> <message-body> }
     rule reserved       { 'reserved' [ <ranges> | <field-names> ] }
     rule ranges         { <extension> (',' <extension>)* ';' }
-    rule field-names     { <str-lit> (',' <str-lit>)* ';' }
+    rule field-names    { <str-lit> (',' <str-lit>)* ';' }
 
     rule oneof          { 'oneof' <ident> '{' [ <group> | <field> | <option> | ';' ]* '}' }
 
