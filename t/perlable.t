@@ -7,10 +7,7 @@ plan(4);
 
 
 {
-    # Testing extended BOOSTRAPATTR
-    constant \BOOTSTRAPATTR := Attribute.^attributes[0].WHAT;
-
-    my class Test::BootAttr is BOOTSTRAPATTR
+    my class Test::BootAttr is Attribute
         does Metamodel::PerlableAttribute { }
 
     my $name  := 'Test::BootClass';
