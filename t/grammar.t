@@ -100,4 +100,4 @@ ok PB::Grammar.parse('
     service things_that_do_stuff { rpc things (.stuff)returns (Trolololol);rpc wobble(lolwut)returns(noshing);}
 '), "test a big complex mofo";
 
-done;
+done-testing;

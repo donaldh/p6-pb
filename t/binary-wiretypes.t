@@ -16,4 +16,4 @@ is +WireType::FIXED_32,         5, "Wire type FIXED_32 has correct value 5";
 
 
 # Tell prove that we've completed testing normally
-done;
+done-testing;

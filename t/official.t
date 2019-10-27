@@ -28,4 +28,4 @@ if run('which', 'git') == 0 {
     say 'git is not installed... skipping official protobuf tests';
 }
 
-done;
+done-testing;

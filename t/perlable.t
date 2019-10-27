@@ -97,4 +97,4 @@ plan(4);
 }
 
 
-done;
+done-testing;

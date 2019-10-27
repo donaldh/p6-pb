@@ -124,4 +124,4 @@ constant $PROTO_DIR = "$DATA_ROOT/google-docs";
 
 
 # Tell prove that we've completed testing normally
-done;
+done-testing;

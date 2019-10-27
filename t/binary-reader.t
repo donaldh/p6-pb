@@ -89,4 +89,4 @@ is $offset,     14, '... and offset was updated correctly';
 
 
 # Tell prove that we've completed testing normally
-done;
+done-testing;
