@@ -132,7 +132,7 @@ class PB::Model::Generator {
             }
 
             my $attr-name = $sigil ~ '!' ~ $field.name;
-            my Mu $cd    := ContainerDescriptor.new(:name($attr-name), :rw,
+            my Mu $cd    := ContainerDescriptor.new(:name($attr-name), :dynamic,
                                                     :of($type),
                                                     :default($type));
             my Mu $cont  := nqp::create($container);
