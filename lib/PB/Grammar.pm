@@ -1,3 +1,4 @@
+#no precompilation;
 #use Grammar::Tracer;
 
 grammar PB::Grammar {
