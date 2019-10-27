@@ -33,7 +33,7 @@ plan(4);
         }
         BOOT_PERL
 
-    if $*VM<name> eq 'jvm' {
+    if $*VM.name eq 'jvm' {
         skip "rakudo-jvm NPE's when reading unassigned str attributes; see http://irclog.perlgeek.de/perl6/2013-11-14#i_7862142";
     }
     else {
