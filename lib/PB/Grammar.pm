@@ -2,6 +2,8 @@
 #use Grammar::Tracer;
 
 grammar PB::Grammar {
+    my @reserved-words = <required optional repeated>;
+
     rule TOP            { ^ <proto> $ }
     rule proto          { [<message> | <pkg> | <import> | <option> | <enum> | <extend> | <service> | <syntax> | ';' ]* }
 
@@ -85,7 +87,7 @@ grammar PB::Grammar {
 
     rule full-ident     { <ident>+ % '.'}
 
-    token ident         { <[_a..zA..Z]>\w* }
+    token ident         { <[_a..zA..Z]>\w* <!{ $/.Str (elem) @reserved-words }> }
 
     token dotted-ident  { <ident> ('.' <ident>)* }
 
