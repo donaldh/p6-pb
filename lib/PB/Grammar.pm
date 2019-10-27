@@ -1,8 +1,8 @@
 #use Grammar::Tracer;
 
 grammar PB::Grammar {
-    token TOP           { ^ <.ws> <proto> <.ws> $ <.ws> }
-    token proto         { [<message> | <pkg> | <import> | <option> | <enum> | <extend> | <service> | <syntax> | ';' ]* }
+    rule TOP            { ^ <proto> $ }
+    rule proto          { [<message> | <pkg> | <import> | <option> | <enum> | <extend> | <service> | <syntax> | ';' ]* }
 
     # comments and whitespace
     proto token comment { * }
