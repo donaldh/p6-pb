@@ -221,4 +221,6 @@ sub read-message(PB::Message $message-type, blob8 $buffer, Int $offset is rw,
             $message."$name"() = decode-value($pb_type, $value);
         }
     }
+
+    $message;
 }
