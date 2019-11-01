@@ -179,7 +179,7 @@ sub read-message(PB::Message $message-type, blob8 $buffer, Int $offset is rw,
                               // %WIRE_TYPE<DEFAULT>;
 
         my $repeated = $field.pb_repeat ~~ RepeatClass::REPEATED;
-        my $packed = $repeated && $wire-type ~~ WireType::LENGTH_DELIMITED;
+        my $packed = $repeated && $wire-type !~~ WireType::LENGTH_DELIMITED;
 
         fail X::PB::Binary::WireType::Mismatch.new(
             :offset($orig-offset), :$field, :$message-type,
