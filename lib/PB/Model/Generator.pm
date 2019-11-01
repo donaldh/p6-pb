@@ -154,6 +154,9 @@ class PB::Model::Generator {
             $class.^add_attribute($attr);
         }
         $class.^compose;
+
+        $.gen-class($_) for $msg.messages;
+
         # say $class.^perl;
         take $class-name, $class;
     }
