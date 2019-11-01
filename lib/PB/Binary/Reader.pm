@@ -51,7 +51,7 @@ sub decode-zigzag(int $zigzag --> int) is pure is export {
 
 
 #= Decode a value of an arbitrary field type
-sub decode-value(Str $field-type, Mu $value --> Mu) is pure is export {
+multi sub decode-value(Str $field-type, Mu $value --> Mu) is pure is export {
     given $field-type {
         when 'int32'|'uint32'|'fixed32'|'sfixed32'
             |'int64'|'uint64'|'fixed64'|'sfixed64'
@@ -71,6 +71,9 @@ sub decode-value(Str $field-type, Mu $value --> Mu) is pure is export {
     }
 }
 
+multi sub decode-value(PB::Message $message-type, Mu $value --> Mu) is pure is export {
+    read-message($message-type, $value, (my $ = 0))
+}
 
 #= Read a varint from a buffer at a given offset, updating the offset
 sub read-varint(blob8 $buffer, Int $offset is rw --> uint) is export {
@@ -162,6 +165,7 @@ sub read-message(PB::Message $message-type, blob8 $buffer, Int $offset is rw,
         return read-message($message-type, $sub-buf, (my $ = 0));
     }
 
+    #say "Decoding {$message-type.^name}";
     my $message = $message-type.new;
     my %field  := $message-type.^fields-by-tag;
     while $offset < @$buffer {
@@ -215,7 +219,8 @@ sub read-message(PB::Message $message-type, blob8 $buffer, Int $offset is rw,
             }
         }
         elsif $repeated {
-            $message."$name"().push(decode-value($pb_type, $value));
+            my $type = $message.resolve($pb_type);
+            $message."$name"().push(decode-value($type, $value));
         }
         else {
             $message."$name"() = decode-value($pb_type, $value);

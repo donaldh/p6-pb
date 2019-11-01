@@ -14,6 +14,7 @@ my Str constant ANON_NAME = '<anon>';
 class PB::Model::Generator {
     has $.ast;
     has Str $.prefix;
+    state %classes;
 
     method all-classes {
         gather for $.ast -> $tlo { $.gen-class($tlo) }
@@ -81,6 +82,11 @@ class PB::Model::Generator {
         my $class-name := $.gen-class-name($msg);
         my $class      := PB::MessageClassHOW.new_type(:name($class-name));
         $class.HOW.add_parent($class, PB::Message);
+
+        %classes{$class-name} = $class;
+        my $classes-alias := %classes;
+        $class.HOW.add_method($class, 'resolve',
+                              method ($name) { $classes-alias{$name} });
 
         for $msg.enums -> $enum {
             my $enum-name = $.gen-class-name($enum);
