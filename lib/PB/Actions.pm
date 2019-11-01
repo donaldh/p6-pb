@@ -57,7 +57,7 @@ class PB::Actions {
 
     method field($/) {
         make PB::Model::Field.new(
-            label => $<label>.Str, 
+            label => $<label> ?? $<label>.Str !! 'optional',
             type => $<type>.Str,
             name => $<ident>.Str,
             number => $<field-num>.Num.Int,
