@@ -1,4 +1,4 @@
-use Grammar::Tracer;
+#use Grammar::Tracer;
 
 use Test;
 use PB::Grammar;
@@ -8,8 +8,10 @@ use PB::Model::Message;
 use PB::Model::Option;
 use PB::Model::Enum;
 use PB::Model::Extension;
+use PB::Model::Rpc;
+use PB::Model::Service;
 
-plan(117);
+plan(118);
 
 # Cribbed from Test.pm's is_deeply(), to work around a language limitation
 # which prevents an independently compiled module (Test.pm in this case)
@@ -301,4 +303,13 @@ sub gr_ok($text, $rule, $expected, $desc?) {
             PB::Model::ExtensionField.new(start=>1, end=>100),
             PB::Model::ExtensionField.new(start=>101, end=>PB::Model::ExtensionField::MAX)]),
         'message w/ 2 extensions (one of which is MAX)';
+}
+
+# PB::Model::Service parsing
+{
+    gr_ok 'service SearchService { rpc Search (SearchRequest) returns (SearchResponse); }', <service>,
+            PB::Model::Service.new(name => 'SearchService', rpcs => [
+                PB::Model::Rpc.new(name => 'Search', input => 'SearchRequest', output => 'SearchResponse')
+            ]),
+            'service w/ single rpc';
 }

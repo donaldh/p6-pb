@@ -5,6 +5,8 @@ use PB::Model::Option;
 use PB::Model::Package;
 use PB::Model::Enum;
 use PB::Model::Extension;
+use PB::Model::Service;
+use PB::Model::Rpc;
 
 
 class PB::Actions {
@@ -19,6 +21,7 @@ class PB::Actions {
         }
         make PB::Model::Package.new(
             name => $pkg,
+            services => $<service>>>.ast,
             messages => $<message>>>.ast,
             options => $<option>>>.ast,
             enums => $<enum>>>.ast
@@ -42,6 +45,21 @@ class PB::Actions {
             name => $<ident>.Str,
             value => $<int-lit>.Num.Int,
             options => $<field-opts> ?? $<field-opts>.ast !! []
+        );
+    }
+
+    method service($/) {
+        make PB::Model::Service.new(
+            name => $<ident>.Str,
+            rpcs => $<rpc>>>.ast
+        );
+    }
+
+    method rpc($/) {
+        make PB::Model::Rpc.new(
+            name => $<ident>.Str,
+            input => $<user-type>[0].Str,
+            output => $<user-type>[1].Str
         );
     }
 
