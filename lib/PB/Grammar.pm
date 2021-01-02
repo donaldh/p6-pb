@@ -32,7 +32,8 @@ grammar PB::Grammar {
 
     # service/rpc
     rule service        { 'service' <ident> '{' [<option> | <rpc> | ';']* '}' }
-    rule rpc            { 'rpc' <ident> '(' <user-type> ')' 'returns' '(' <user-type> ')' [<rpc-body>? | ';' ] }
+    rule rpc            { 'rpc' <ident> '(' 'stream'? <user-type> ')' 'returns' '(' 'stream'? <user-type> ')'
+                        [<rpc-body>? | ';' ] }
     rule rpc-body       { '{' ~ '}' [<option>*] }
 
     # extend

@@ -1,0 +1,14 @@
+{
+  "name": "Protocol-Buffers",
+  "description": "Google Protocol Buffers parser and wire protocol",
+  "version": "0.1",
+  "perl": "6.*",
+  "auth": "Samuel Sutch",
+  "depends": [],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {},
+  "resources": [],
+  "license": "Write me!",
+  "source-url": "Write me!"
+}

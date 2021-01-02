@@ -58,8 +58,8 @@ class PB::Actions {
     method rpc($/) {
         make PB::Model::Rpc.new(
             name => $<ident>.Str,
-            input => $<user-type>[0].Str,
-            output => $<user-type>[1].Str
+            input => PB::Model::MessageType.new(name => $<user-type>[0].Str, is-stream => False),
+            output => PB::Model::MessageType.new(name => $<user-type>[1].Str, is-stream => False)
         );
     }
 

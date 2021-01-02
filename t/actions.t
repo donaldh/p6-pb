@@ -309,7 +309,19 @@ sub gr_ok($text, $rule, $expected, $desc?) {
 {
     gr_ok 'service SearchService { rpc Search (SearchRequest) returns (SearchResponse); }', <service>,
             PB::Model::Service.new(name => 'SearchService', rpcs => [
-                PB::Model::Rpc.new(name => 'Search', input => 'SearchRequest', output => 'SearchResponse')
+                PB::Model::Rpc.new(
+                        name => 'Search',
+                        input => PB::Model::MessageType.new(name => 'SearchRequest'),
+                        output => PB::Model::MessageType.new(name => 'SearchResponse'))
             ]),
             'service w/ single rpc';
+
+    gr_ok 'service SearchService { rpc Search (stream SearchRequest) returns (stream SearchResponse); }', <service>,
+            PB::Model::Service.new(name => 'SearchService', rpcs => [
+                PB::Model::Rpc.new(
+                        name => 'Search',
+                        input => PB::Model::MessageType.new(name => 'SearchRequest'),
+                        output => PB::Model::MessageType.new(name => 'SearchResponse'))
+            ]),
+            'service w/ single stream rpc';
 }

@@ -1,9 +1,10 @@
+use PB::Model::MessageType;
 use PB::Model::Extension;
 
 class PB::Model::Rpc {
     has Str $.name;
-    has Str $.input;
-    has Str $.output;
+    has PB::Model::MessageType $.input;
+    has PB::Model::MessageType $.output;
     has PB::Model::ExtensionField @.extensions;
 
     method new(Str :$name!, :$input!, :$output!, :@extensions) {
