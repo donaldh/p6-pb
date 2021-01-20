@@ -9,7 +9,7 @@ use PB::Model::Extension;
 use PB::Model::Rpc;
 use PB::Model::Service;
 
-plan(118);
+plan(119);
 
 # Cribbed from Test.pm's is_deeply(), to work around a language limitation
 # which prevents an independently compiled module (Test.pm in this case)
