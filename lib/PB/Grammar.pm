@@ -45,9 +45,7 @@ grammar PB::Grammar {
                                | <extensions> | <reserved> | <option> | <group> | <enum> | <extend> | ';' ]* '}' }
 
     rule field          { <label>? <type> <ident> '=' <field-num> <field-opts>? ';' }
-    rule field-opts     { '[' <opt-body>+ % ',' ']' } # todo: make this turn into a prettier ast, also disallow trailing comma
-    # token field-opt     { [<default-opt> | <opt-body>] }
-    # rule default-opt    { 'default' <.ws> '=' <constant> }
+    rule field-opts     { '[' <opt-body>+ %% ',' ']' } # todo: make this turn into a prettier ast
     rule extensions     { 'extensions' <extension> (',' <extension>)* ';' }
     rule extension      { $<start>=<int-lit> ['to' $<end>=[<int-lit> | 'max']]? }
     rule group          { <label>? 'group' <camel-ident> '=' <int-lit> <message-body> }
