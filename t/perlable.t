@@ -26,7 +26,7 @@ plan(4);
         class Test::BootClass {
             has str $!foo;
             has int $!bar;
-            has num $!baz is box_target;
+            has num $!baz;
         }
         BOOT_PERL
 
