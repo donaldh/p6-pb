@@ -3,8 +3,6 @@ use PB::Actions;
 
 unit module PB;
 
-use Grammar::Tracer;
-
 sub parse-idl-str($protofile) is export {
     my $actions = PB::Actions.new();
     my $result;

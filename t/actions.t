@@ -1,5 +1,3 @@
-#use Grammar::Tracer;
-
 use Test;
 use PB::Grammar;
 use PB::Actions;
