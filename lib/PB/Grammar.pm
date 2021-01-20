@@ -88,7 +88,7 @@ grammar PB::Grammar {
 
     token ident         { <[_a..zA..Z]>\w* <!{ $/.Str (elem) @reserved-words }> }
 
-    token dotted-ident  { <ident> ('.' <ident>)* }
+    token dotted-ident  { <ident> (<[./]> <ident>)* }
 
     token camel-ident   { <[A..Z]>\w* }
 
