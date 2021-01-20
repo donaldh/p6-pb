@@ -27,7 +27,7 @@ grammar PB::Grammar {
     rule option         { 'option' <opt-body> ';' }
 
     # enum
-    rule enum           { 'enum' <ident> '{' [<option> | <enum-field> | ';' ]* '}' } # todo: translate into  '{' ~ '}'
+    rule enum           { 'enum' <ident> '{' ~ '}' [<option> | <enum-field> | ';' ]* }
     rule enum-field     { <ident> '=' <int-lit> <field-opts>? ';' }
 
     # service/rpc
