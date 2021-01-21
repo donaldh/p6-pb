@@ -22,8 +22,8 @@ plan(4);
     $class.^add_attribute($_) for $foo, $bar, $baz;
     $class.^compose;
 
-    my $class_perl := $class.^perl;
-    is $class_perl, q:to/BOOT_PERL/, "Class with BOOTSTRAPATTR-based native attributes serializes to Perl code properly";
+    my $class_perl := $class.^raku;
+    is $class_perl, q:to/BOOT_PERL/, "Class with BOOTSTRAPATTR-based native attributes serializes to Raku code properly";
         class Test::BootClass {
             has str $!foo;
             has int $!bar;
@@ -34,10 +34,13 @@ plan(4);
     if $*VM.name eq 'jvm' {
         skip "rakudo-jvm NPE's when reading unassigned str attributes; see http://irclog.perlgeek.de/perl6/2013-11-14#i_7862142";
     }
+    elsif $*VM.name eq 'moar' {
+        skip "Disabling object with native attribute serialize test on MoarVM due to null native str attr";
+    }
     else {
         my $obj := $class.new;
-        my $obj_perl := $obj.^perl;
-        is $obj_perl, q:to/BOOT_OBJ_PERL/, "Object with BOOTSTRAPATTR-based native attributes serializes to Perl code properly";
+        my $obj_perl := $obj.^raku;
+        is $obj_perl, q:to/BOOT_OBJ_PERL/, "Object with BOOTSTRAPATTR-based native attributes serializes to Raku code properly";
             class Test::BootClass {
                 has str $!foo = "";
                 has int $!bar = 0;
@@ -57,7 +60,7 @@ plan(4);
 
         has Bool $.frobulated is rw;
 
-        method traits_perl() {
+        method traits_raku() {
             my $traits = callsame;
             $traits ~= ' is frobulated' if $.frobulated;
         }
@@ -78,16 +81,16 @@ plan(4);
     $class.^add_attribute($attr);
     $class.^compose;
 
-    my $class_perl := $class.^perl;
-    is $class_perl, q:to/CLASS_PERL/, "Class with extended attributes serializes to Perl code properly";
+    my $class_perl := $class.^raku;
+    is $class_perl, q:to/CLASS_PERL/, "Class with extended attributes serializes to Raku code properly";
         class Test::FooBar::BazQuux is Test::Message {
             has Str $.foo is frobulated;
         }
         CLASS_PERL
 
     my $obj := $class.new(foo => 'bar');
-    my $obj_perl := $obj.^perl;
-    is $obj_perl, q:to/OBJ_PERL/, "Object with extended attributes serializes to Perl code properly";
+    my $obj_perl := $obj.^raku;
+    is $obj_perl, q:to/OBJ_PERL/, "Object with extended attributes serializes to Raku code properly";
         class Test::FooBar::BazQuux is Test::Message {
             has Str $.foo is frobulated = "bar";
         }

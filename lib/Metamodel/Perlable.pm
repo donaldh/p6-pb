@@ -3,20 +3,20 @@ use nqp;
 
 #= Composed into an Attribute subclass to serialize the attribute definitions to Perl source
 role Metamodel::PerlableAttribute {
-    method traits_perl(Metamodel::PerlableAttribute:D:) {
+    method traits_raku(Metamodel::PerlableAttribute:D:) {
         my $traits = '';
         $traits ~= ' is rw'         if nqp::can(self, 'rw') && self.rw;
         $traits ~= ' is box_target' if self.box_target;
         $traits;
     }
 
-    method perl(Metamodel::PerlableAttribute:D:) {
+    method raku(Metamodel::PerlableAttribute:D:) {
         my $has_cd = nqp::can(self, 'container_descriptor');
         my $of     = $has_cd ?? self.container_descriptor.of !! self.type;
         my $type   = $of.HOW.name($of);
         my $name   = self.name;
            $name  .= subst('!', '.') if self.has_accessor;
-        my $traits = self.traits_perl;
+        my $traits = self.traits_raku;
 
         "has $type $name$traits";
     }
@@ -25,13 +25,13 @@ role Metamodel::PerlableAttribute {
 
 #= Composed into a Metamodel::ClassHOW subclass to serialize class definitions to Perl source
 role Metamodel::PerlableClass {
-    multi method perl(Mu $class) {
+    multi method raku(Mu $class) {
         my $perl = "class $class.^name()";
         $perl ~= " is $_.^name()"   for $class.^parents;
         $perl ~= " does $_.^name()" for $class.^roles;
         $perl ~= " \{\n";
         for $class.^attributes.grep(Metamodel::PerlableAttribute) -> $attr {
-            my $attr_perl = $attr.perl;
+            my $attr_perl = $attr.raku;
             if $class.defined {
                 my $attr_name = $attr.name;
                 my $has_value = True;
@@ -59,7 +59,7 @@ role Metamodel::PerlableClass {
                     $has_value = False;
                 }
 
-                $attr_perl ~= " = $value.perl()" if $has_value;
+                $attr_perl ~= " = $value.raku()" if $has_value;
             }
             $perl ~= "    $attr_perl;\n";
         }
