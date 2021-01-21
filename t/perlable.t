@@ -16,8 +16,9 @@ plan(4);
 
     my $foo := Test::BootAttr.new(:name<$!foo>, :type(str), :package($class));
     my $bar := Test::BootAttr.new(:name<$!bar>, :type(int), :package($class));
-    my $baz := Test::BootAttr.new(:name<$!baz>, :type(num), :package($class),
-                                  :box_target);
+    my $baz := Test::BootAttr.new(:name<$!baz>, :type(num), :package($class));
+    $baz.set_box_target; # box_target is ignored in Attribute.new
+
     $class.^add_attribute($_) for $foo, $bar, $baz;
     $class.^compose;
 
@@ -26,7 +27,7 @@ plan(4);
         class Test::BootClass {
             has str $!foo;
             has int $!bar;
-            has num $!baz;
+            has num $!baz is box_target;
         }
         BOOT_PERL
 
